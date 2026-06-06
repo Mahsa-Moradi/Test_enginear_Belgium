@@ -23,6 +23,9 @@ type Step = "form" | "calendly";
 /** Set to `true` to show every card in Professional Experience; `false` shows only Scalian (id 1). */
 const SHOW_ALL_PROFESSIONAL_EXPERIENCES = false;
 
+/** Set to `true` to show the IMEC logo in the companies marquee; `false` hides it. */
+const SHOW_IMEC_LOGO = false;
+
 // Neural Network Background Component
 function NeuralNetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -405,6 +408,14 @@ export default function Home() {
       },
     ],
     []
+  );
+
+  const visibleExperienceCompanies = useMemo(
+    () =>
+      SHOW_IMEC_LOGO
+        ? experienceCompanies
+        : experienceCompanies.filter((c) => c.name !== "IMEC"),
+    [experienceCompanies]
   );
 
   const activeExperience = useMemo(() => {
@@ -1283,7 +1294,10 @@ export default function Home() {
                 <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-slate-50 to-transparent" />
 
                 <div className="experience-marquee flex w-max items-center gap-12 pr-12">
-                  {[...experienceCompanies, ...experienceCompanies].map(
+                  {[
+                    ...visibleExperienceCompanies,
+                    ...visibleExperienceCompanies,
+                  ].map(
                     (company, idx) => (
                       <a
                         key={`${company.name}-${idx}`}
